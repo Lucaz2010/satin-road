@@ -1,0 +1,11 @@
+﻿using Infra;
+
+namespace API.Controllers;
+
+public class ProductTypeService (SatinRoadDbConnection db)
+{
+    public List<ProductType> GetProductTypes()
+    {
+        return db.ProductTypeTable.ToList();
+    }
+}
