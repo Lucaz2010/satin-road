@@ -18,6 +18,7 @@ export function App() {
         MyApi.getProductTypes.productTypeGetProductTypes()
             .then(r =>{ 
                 const data = r.data;
+                setProductTypes(data);
             })
         }, []);
     
