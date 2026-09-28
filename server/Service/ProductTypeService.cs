@@ -6,6 +6,6 @@ public class ProductTypeService (SatinRoadDbConnection db)
 {
     public List<ProductType> GetProductTypes()
     {
-        return db.ProductTypeTable.ToList();
+        return db.differentProductTypes.ToList();
     }
 }
