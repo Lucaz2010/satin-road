@@ -1,4 +1,5 @@
-﻿using LinqToDB;
+﻿using Infra.Entities;
+using LinqToDB;
 using LinqToDB.Data;
 
 namespace Infra;

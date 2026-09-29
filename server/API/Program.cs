@@ -1,5 +1,6 @@
 using API.Controllers;
 using Infra;
+using Infra.Entities;
 using LinqToDB;
 
 var builder = WebApplication.CreateBuilder(args);

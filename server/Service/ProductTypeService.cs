@@ -1,4 +1,5 @@
 ﻿using Infra;
+using Infra.Entities;
 
 namespace API.Controllers;
 
