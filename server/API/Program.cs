@@ -38,8 +38,20 @@ using (var scope = app.Services.CreateScope())
         {
             ProductTypeId = "1",
             ProductTypeName = "Drugs"
-
         });
+            db.Insert(new ProductType
+            {
+            ProductTypeId = "2",
+            ProductTypeName = "Weaponry"
+        });
+
+        db.Insert(new ProductType
+        {
+            ProductTypeId = "3",
+            ProductTypeName = "Stolen Artifacts"
+            
+        });
+        
     }
     
     if (db.Users.Count() == 0)

@@ -10,18 +10,44 @@
  * ---------------------------------------------------------------
  */
 
-export interface Product {
+export interface ProductDto {
+  vendor?: VendorDto;
   productId?: string;
   productName?: string;
   description?: string | null;
   vendorId?: string;
-  vendor?: User;
-  price?: string;
-  inventory?: string;
+  /** @format decimal */
+  price?: number;
+  /** @format int32 */
+  inventory?: number;
   isActive?: boolean;
+  /** @format date-time */
   createdAt?: string;
   productTypeId?: string;
   productType?: ProductType;
+}
+
+export interface VendorDto {
+  userId?: string;
+  username?: string;
+}
+
+export interface ProductType {
+  productTypeId?: string;
+  productTypeName?: string;
+  description?: string | null;
+  isActive?: boolean;
+}
+
+export interface CreateProductRequestDto {
+  productName?: string;
+  /** @format decimal */
+  price?: number;
+  /** @format int32 */
+  inventory?: number;
+  description?: string | null;
+  productTypeId?: string;
+  vendorId?: string;
 }
 
 export interface User {
@@ -33,14 +59,24 @@ export interface User {
   role?: string;
   isActive?: boolean;
   createdAt?: string;
-  products?: Product[];
+  productsBeingSoldByVendor?: Product[];
 }
 
-export interface ProductType {
-  productTypeId?: string;
-  productTypeName?: string;
+export interface Product {
+  productId?: string;
+  productName?: string;
   description?: string | null;
+  vendorId?: string;
+  vendor?: User;
+  /** @format decimal */
+  price?: number;
+  /** @format int32 */
+  inventory?: number;
   isActive?: boolean;
+  /** @format date-time */
+  createdAt?: string;
+  productTypeId?: string;
+  productType?: ProductType;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -323,10 +359,30 @@ export class Api<
       },
       params: RequestParams = {},
     ) =>
-      this.request<Product[], any>({
+      this.request<ProductDto[], any>({
         path: `/Product/GetProducts`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductCreateProduct
+     * @request POST:/Product/CreateProduct
+     */
+    productCreateProduct: (
+      data: CreateProductRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductDto, any>({
+        path: `/Product/CreateProduct`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
