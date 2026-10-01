@@ -12,6 +12,7 @@ builder.Services.AddScoped<SatinRoadDbConnection>(_ =>
 
 builder.Services.AddScoped<ProductTypeService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddControllers();
 builder.Services.AddOpenApiDocument();
 builder.Services.AddCors();
@@ -28,6 +29,9 @@ using (var scope = app.Services.CreateScope())
    var db = scope.ServiceProvider.GetRequiredService<SatinRoadDbConnection>();
    
     db.CreateTable<ProductType>(tableOptions:TableOptions.CreateIfNotExists);
+    db.CreateTable<User>(tableOptions:TableOptions.CreateIfNotExists);
+    db.CreateTable<Product>(tableOptions:TableOptions.CreateIfNotExists);
+    
     if (db.differentProductTypes.Count() == 0)
     {
         db.Insert(new ProductType()
@@ -38,13 +42,26 @@ using (var scope = app.Services.CreateScope())
         });
     }
     
-    db.CreateTable<User>(tableOptions:TableOptions.CreateIfNotExists);
     if (db.Users.Count() == 0)
     {
         db.Insert(new User
         {
             UserId = "1",
             Username = "Conan"
+        });
+    }
+    if (db.Products.Count() == 0)
+    {
+        db.Insert(new Product
+        {
+          ProductId = "1",
+          ProductTypeId = "1",
+          ProductName = "Steroids",
+          VendorId = "1",
+          Price = "100",
+          Inventory = "1",
+          IsActive = true,
+          CreatedAt = DateTime.UtcNow.ToString()
         });
     }
     

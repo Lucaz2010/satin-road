@@ -7,3 +7,7 @@ db.b
 *.db
 *.sqlite
 
+# JetBrains Rider local user settings
+*.DotSettings.user
+.idea/.idea.*.workspace.xml
+.idea/.idea.*.iml

@@ -13,4 +13,5 @@ public class SatinRoadDbConnection : DataConnection
 
     public ITable<ProductType> differentProductTypes => this.GetTable<ProductType>();
     public ITable<User> Users => this.GetTable<User>();
+    public ITable<Product> Products => this.GetTable<Product>();
 }

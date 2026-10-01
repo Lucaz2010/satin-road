@@ -10,9 +10,37 @@
  * ---------------------------------------------------------------
  */
 
+export interface Product {
+  productId?: string;
+  productName?: string;
+  description?: string | null;
+  vendorId?: string;
+  vendor?: User;
+  price?: string;
+  inventory?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  productTypeId?: string;
+  productType?: ProductType;
+}
+
+export interface User {
+  userId?: string;
+  username?: string;
+  email?: string;
+  passwordHash?: string;
+  salt?: string;
+  role?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  products?: Product[];
+}
+
 export interface ProductType {
   productTypeId?: string;
   productTypeName?: string;
+  description?: string | null;
+  isActive?: boolean;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -278,17 +306,58 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
-  getProductTypes = {
+  product = {
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductGetProducts
+     * @request GET:/Product/GetProducts
+     */
+    productGetProducts: (
+      query?: {
+        /** @format int32 */
+        page?: number;
+        /** @format int32 */
+        resultsPerPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<Product[], any>({
+        path: `/Product/GetProducts`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+  };
+  productType = {
     /**
      * No description
      *
      * @tags ProductType
      * @name ProductTypeGetProductTypes
-     * @request GET:/GetProductTypes
+     * @request GET:/ProductType/GetProductTypes
      */
     productTypeGetProductTypes: (params: RequestParams = {}) =>
       this.request<ProductType[], any>({
-        path: `/GetProductTypes`,
+        path: `/ProductType/GetProductTypes`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+  };
+  user = {
+    /**
+     * No description
+     *
+     * @tags User
+     * @name UserGetUsers
+     * @request GET:/User/GetUsers
+     */
+    userGetUsers: (params: RequestParams = {}) =>
+      this.request<User[], any>({
+        path: `/User/GetUsers`,
         method: "GET",
         format: "json",
         ...params,
