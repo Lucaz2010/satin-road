@@ -15,5 +15,5 @@ public class User
     public string CreatedAt { get; set; }
     
     [Association(ThisKey = nameof(UserId), OtherKey = nameof(Product.VendorId))]
-    public List<Product> Products { get; set; } = [];
+    public List<Product> ProductsBeingSoldByVendor { get; set; } = [];
 }

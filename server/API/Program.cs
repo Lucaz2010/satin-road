@@ -58,10 +58,10 @@ using (var scope = app.Services.CreateScope())
           ProductTypeId = "1",
           ProductName = "Steroids",
           VendorId = "1",
-          Price = "100",
-          Inventory = "1",
+          Price = 120,
+          Inventory = 1,
           IsActive = true,
-          CreatedAt = DateTime.UtcNow.ToString()
+          CreatedAt = DateTime.Now,
         });
     }
     
