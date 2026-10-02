@@ -1,16 +1,21 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
+namespace API;
+
 public class MyExceptionHandler : IExceptionHandler
 {
-    public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        httpContext.Response.WriteAsJsonAsync(
+        httpContext.Response.StatusCode = 400;
+      await httpContext.Response.WriteAsJsonAsync(
             new ProblemDetails()
             {
                 Title = exception.Message
                 
-            });
-        return default;
+            },
+            cancellationToken
+            );
+        return true;
     }
 }

@@ -1,8 +1,5 @@
-import { APITester } from "./APITester";
 import "./index.css";
 
-import logo from "./logo.svg";
-import reactLogo from "./react.svg";
 import {Api, type ProductDto, type ProductType} from "../Api.ts";
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
@@ -27,55 +24,20 @@ export function App() {
         MyApi.productType.productTypeGetProductTypes()
             .then(r=> {
                 setProductTypes(r.data);
-            })
-            .catch(e => {
-                console.error("Product types error:", e);
-                toast.error("Could not load product categories.");
             });
         
         MyApi.product.productGetProducts({
             page: 1,
             resultsPerPage:10
-        }
-        )
-            .then(r =>{ 
-                const data = r.data;
-                setProducts(data);
-            })
-            .catch(e => {
-                console.error("Products error:", e);
-                toast.error("Could not load products.");
+        })
+            .then(r =>{
+                setProducts(r.data);
             });
         
         }, []);
 
 
     function createProduct() {
-        if(!newProductName.trim()) {
-            toast.error("Product name is required.");
-            return;
-        } 
-        
-        if(!selectedProductTypeId.trim()){
-            toast.error("Please select a category.");
-            return;
-        }
-        
-        
-        const price = Number(newPrice);
-
-        if (!Number.isFinite(price) || price <= 0) {
-            toast.error("Price must be higher than zero.");
-            return;
-        }
-
-        const inventory = Number(newInventory);
-
-        if (!Number.isInteger(inventory) || inventory < 1) {
-            toast.error("Inventory must be 1 or higher.");
-            return;
-        }
-        
         
         MyApi.product.productCreateProduct({
             
@@ -83,11 +45,12 @@ export function App() {
             productName: newProductName,
             price : Number(newPrice),
             vendorId: "1",
-            inventory : inventory,
+            inventory : Number(newInventory),
             productTypeId: selectedProductTypeId,
         }).then(r => {
             const duplicate = [...products,r.data];
             setProducts(duplicate);
+            
             setNewProductName("");
             setSelectedProductTypeId("");
             setNewPrice("");

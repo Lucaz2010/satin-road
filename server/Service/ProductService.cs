@@ -27,14 +27,25 @@ public class ProductService (SatinRoadDbConnection db)
 
     public ProductDto CreateProduct(CreateProductRequestDto dto)
     {
-        if (dto.Inventory < 1)
+        
+        if (string.IsNullOrWhiteSpace(dto.ProductName))
         {
-            throw new ValidationException("Inventory must be 1 or higher.");
+            throw new ValidationException("Product name is required.");
         }
 
+        if (string.IsNullOrWhiteSpace(dto.ProductTypeId))
+        {
+            throw new ValidationException("Product Category is required.");
+        }
+        
         if (dto.Price <= 0)
         {
             throw new ValidationException("Price must be higher than zero.");
+        }
+        
+        if (dto.Inventory < 1)
+        {
+            throw new ValidationException("Inventory must be 1 or higher.");
         }
         
         

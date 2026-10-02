@@ -1,3 +1,4 @@
+using API;
 using API.Controllers;
 using Infra;
 using Infra.Entities;
