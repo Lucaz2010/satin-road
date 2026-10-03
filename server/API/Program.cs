@@ -6,9 +6,12 @@ using LinqToDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "Data Source = db.b";
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? throw new InvalidOperationException("Database connection string is missing.");
+
+
 var options = new DataOptions<SatinRoadDbConnection>(
-    new DataOptions().UseSQLite(connectionString));
+    new DataOptions().UsePostgreSQL(connectionString));
 builder.Services.AddScoped<SatinRoadDbConnection>(_ =>
     new SatinRoadDbConnection(options));
 
