@@ -6,8 +6,9 @@ using LinqToDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = "Data Source = db.b";
 var options = new DataOptions<SatinRoadDbConnection>(
-    new DataOptions().UseSQLite("Data Source = db.b"));
+    new DataOptions().UseSQLite(connectionString));
 builder.Services.AddScoped<SatinRoadDbConnection>(_ =>
     new SatinRoadDbConnection(options));
 
