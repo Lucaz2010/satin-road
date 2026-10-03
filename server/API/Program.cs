@@ -68,8 +68,8 @@ using (var scope = app.Services.CreateScope())
         db.Insert(new Product
         {
           ProductId = "1",
-          ProductTypeId = "1",
-          ProductName = "Steroids",
+          ProductTypeId = "2",
+          ProductName = "AK-48",
           VendorId = "1",
           Price = 120,
           Inventory = 1,
