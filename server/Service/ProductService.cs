@@ -2,8 +2,9 @@
 using Infra;
 using Infra.Entities;
 using LinqToDB;
+using Service.Dtos;
 
-namespace API.Controllers;
+namespace Service;
 
 public class ProductService (SatinRoadDbConnection db)
 {
@@ -23,6 +24,23 @@ public class ProductService (SatinRoadDbConnection db)
                 }
                 )
             .ToList();
+    }
+    
+    public ProductDto GetSingleProduct(string id)
+    {
+        var product = db.Products
+            .LoadWith(p => p.Vendor)
+            .LoadWith(p=> p.ProductType)
+            .FirstOrDefault(p => p.ProductId == id);
+
+        if (product == null)
+            throw new KeyNotFoundException(
+                $"Product with id '{id}' was not found.");
+
+        return new ProductDto(product)
+        {
+            Vendor = new VendorDto(product.Vendor)
+        };
     }
 
     public ProductDto CreateProduct(CreateProductRequestDto dto)
@@ -70,5 +88,14 @@ public class ProductService (SatinRoadDbConnection db)
         db.Insert(p);
         
         return new ProductDto(p);
+    }
+
+    public void DeleteProduct(string id)
+    {
+        var p = db.Products
+            .FirstOrDefault(p=>p.ProductId == id)
+                ?? throw new KeyNotFoundException(
+                    $"Product with id '{id}' was not found.");
+        db.Delete(p);
     }
 }
