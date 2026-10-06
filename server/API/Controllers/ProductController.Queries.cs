@@ -1,6 +1,4 @@
-﻿using Infra;
-using Infra.Entities;
-using LinqToDB;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
@@ -13,9 +11,10 @@ public partial class ProductController(ProductService service) : ControllerBase
     [HttpGet(nameof(GetProducts))]
     public List<ProductDto> GetProducts(
         [FromQuery] int page,
-        [FromQuery] int resultsPerPage)
+        [FromQuery] int resultsPerPage,
+        [FromQuery] List <string>? productTypeId)
     {
-        return service.GetProducts(page, resultsPerPage);
+        return service.GetProducts(page, resultsPerPage, productTypeId);
     }
 
     [HttpGet("{id}")]

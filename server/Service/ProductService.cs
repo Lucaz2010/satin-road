@@ -8,14 +8,23 @@ namespace Service;
 
 public class ProductService (SatinRoadDbConnection db)
 {
-    public List<ProductDto> GetProducts(int page, int resultsPerPage)
+    public List<ProductDto> GetProducts(
+        int page, int resultsPerPage,
+        List<string>? productTypeId)
     {
         if(page < 1)
             throw new ValidationException("Page must be 1 or higher.");
         if(resultsPerPage < 1)
             throw new ValidationException("Must have at least one result per page.");
-        return db.Products
-            .LoadWith(p => p.Vendor)
+        
+        var query = db.Products.LoadWith(p => p.Vendor).AsQueryable();
+        
+        if (productTypeId is { Count: > 0 })
+            query = query.Where(p => productTypeId.Contains(p.ProductTypeId));
+
+        return query
+            .OrderByDescending(p => p.CreatedAt)
+            /*.LoadWith(p => p.Vendor)*/
             .Skip((page-1) * resultsPerPage)
             .Take(resultsPerPage)
             .Select(p=> new ProductDto(p)
@@ -88,6 +97,36 @@ public class ProductService (SatinRoadDbConnection db)
         db.Insert(p);
         
         return new ProductDto(p);
+    }
+    
+    public ProductDto UpdateProduct(UpdateProductRequestDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.ProductName))
+            throw new ValidationException("Product name is required.");
+
+        if (string.IsNullOrWhiteSpace(dto.ProductTypeId))
+            throw new ValidationException("Product Category is required.");
+
+        if (dto.Price <= 0)
+            throw new ValidationException("Price must be higher than zero.");
+
+        if (dto.Inventory < 1)
+            throw new ValidationException("Inventory must be 1 or higher.");
+
+        var product = db.Products
+                          .FirstOrDefault(p => p.ProductId == dto.ProductId)
+                      ?? throw new KeyNotFoundException(
+                          $"Product with id '{dto.ProductId}' was not found.");
+
+        product.ProductName = dto.ProductName;
+        product.Description = dto.Description;
+        product.Price = dto.Price;
+        product.Inventory = dto.Inventory;
+        product.ProductTypeId = dto.ProductTypeId;
+
+        db.Update(product);
+
+        return new ProductDto(product);
     }
 
     public void DeleteProduct(string id)
