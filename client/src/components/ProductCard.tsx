@@ -10,7 +10,7 @@ export default function ProductCard({product} : ProductCardProps) {
     
     return (
         <div>
-            <p> {product.productType?.productTypeName ?? "Uncategorized"} </p>
+            {/*<p> {product.productType?.productTypeName ?? "Uncategorized"} </p>*/}
             <h2> {product.productName} </h2>
             {product.description && <p>{product.description}</p>}
             <p> Price: ${product.price}</p>

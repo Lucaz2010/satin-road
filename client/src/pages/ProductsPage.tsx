@@ -1,10 +1,20 @@
-﻿import { useNavigate } from "react-router";
+﻿import {useNavigate, useSearchParams} from "react-router";
+import ProductList from "@/components/ProductList.tsx";
+import {useState} from "react";
 
 export default function ProductsPage() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const productTypeId = searchParams.get("productTypeId");
+
 
     return (
         <div>
+            
+            <button onClick={() => navigate("/")}>
+                Home
+            </button>
+
             <h1>Products</h1>
 
             <input
@@ -12,15 +22,8 @@ export default function ProductsPage() {
                 placeholder="Search products..."
             />
 
-            <button onClick={() => navigate("/")}>
-                Home
-            </button>
 
-            <div>
-                <button onClick={() => navigate("/products/1")}>
-                    Example Product
-                </button>
-            </div>
+            <ProductList productTypeId={productTypeId ?? undefined}/>
         </div>
     );
 }

@@ -5,7 +5,11 @@ import { Api } from "../../Api.ts";
 
 const api = new Api();
 
-export default function ProductList() {
+type ProductListProps={
+    productTypeId?: string;
+}
+
+export default function ProductList({productTypeId}: ProductListProps) {
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -16,6 +20,9 @@ export default function ProductList() {
                 const response = await api.api.productGetProducts({
                     page: 1,
                     resultsPerPage: 12,
+                    productTypeId: productTypeId
+                        ? [productTypeId]
+                        : undefined,    
                 });
 
                 setProducts(response.data);
