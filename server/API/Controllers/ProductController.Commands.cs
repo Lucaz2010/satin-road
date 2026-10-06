@@ -21,4 +21,12 @@ public partial class ProductController
     {
         service.DeleteProduct(id);
     }
+    
+    [HttpPatch(nameof(UpdateProduct))]
+    public ProductDto UpdateProduct(
+        [FromBody] UpdateProductRequestDto dto)
+    {
+        return service.UpdateProduct(dto);
+    }
+    
 }
