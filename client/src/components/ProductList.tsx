@@ -1,0 +1,55 @@
+import { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
+import type { ProductDto } from "../../Api.ts";
+import { Api } from "../../Api.ts";
+
+const api = new Api();
+
+export default function ProductList() {
+    const [products, setProducts] = useState<ProductDto[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchProducts() {
+            try {
+                const response = await api.api.productGetProducts({
+                    page: 1,
+                    resultsPerPage: 12,
+                });
+
+                setProducts(response.data);
+            } catch (error) {
+                console.error(error);
+                setError("Could not load products.");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        void fetchProducts();
+    }, []);
+
+    if (loading) {
+        return <p>Loading products...</p>;
+    }
+
+    if (error) {
+        return <p>{error}</p>;
+    }
+
+    if (products.length === 0) {
+        return <p>No products found.</p>;
+    }
+
+    return (
+        <div>
+            {products.map((product) => (
+                <ProductCard
+                    key={product.productId}
+                    product={product}
+                />
+            ))}
+        </div>
+    );
+}

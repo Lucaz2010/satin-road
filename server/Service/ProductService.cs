@@ -17,7 +17,10 @@ public class ProductService (SatinRoadDbConnection db)
         if(resultsPerPage < 1)
             throw new ValidationException("Must have at least one result per page.");
         
-        var query = db.Products.LoadWith(p => p.Vendor).AsQueryable();
+        var query = db.Products
+            .LoadWith(p => p.Vendor)
+            .LoadWith((p=> p.ProductType))
+            .AsQueryable();
         
         if (productTypeId is { Count: > 0 })
             query = query.Where(p => productTypeId.Contains(p.ProductTypeId));
@@ -30,6 +33,7 @@ public class ProductService (SatinRoadDbConnection db)
             .Select(p=> new ProductDto(p)
                 {
                     Vendor = new VendorDto(p.Vendor)
+                    
                 }
                 )
             .ToList();
