@@ -11,3 +11,6 @@ db.b
 *.DotSettings.user
 .idea/.idea.*.workspace.xml
 .idea/.idea.*.iml
+
+# Local environment overrides
+.env

@@ -1,0 +1,27 @@
+# Local development database for Satin Road.
+# Start with: docker compose up -d db
+#
+# Credentials default to local-only dev values; override them in a .env file
+# next to this file (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT).
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: satin-road-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-satinroad}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-satinroad}
+      POSTGRES_DB: ${POSTGRES_DB:-satinroad}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
