@@ -22,4 +22,3 @@ public partial class ProductDto
     public VendorDto Vendor { get; set; }
     
 }
-
