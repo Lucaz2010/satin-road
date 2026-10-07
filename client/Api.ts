@@ -42,12 +42,31 @@ export interface ProductType {
 export interface CreateProductRequestDto {
   productName?: string;
   /** @format decimal */
-  price?: number;
+  price: number;
   /** @format int32 */
   inventory?: number;
   description?: string | null;
   productTypeId?: string;
-  vendorId?: string;
+  /** @minLength 1 */
+  vendorId: string;
+}
+
+export interface UpdateProductRequestDto {
+  productId?: string;
+  productName?: string;
+  description?: string | null;
+  /** @format decimal */
+  price?: number;
+  /** @format int32 */
+  inventory?: number;
+  productTypeId?: string;
+}
+
+export interface ProductTypeDto {
+  productTypeId?: string;
+  productTypeName?: string;
+  description?: string | null;
+  isActive?: boolean;
 }
 
 export interface User {
@@ -342,13 +361,82 @@ export class HttpClient<SecurityDataType = unknown> {
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
-  product = {
+  api = {
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductCreateProduct
+     * @request POST:/api/Product/CreateProduct
+     */
+    productCreateProduct: (
+      data: CreateProductRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductDto, any>({
+        path: `/api/Product/CreateProduct`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductDeleteProduct
+     * @request DELETE:/api/Product/{id}
+     */
+    productDeleteProduct: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/Product/${id}`,
+        method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductGetProduct
+     * @request GET:/api/Product/{id}
+     */
+    productGetProduct: (id: string, params: RequestParams = {}) =>
+      this.request<ProductDto, any>({
+        path: `/api/Product/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Product
+     * @name ProductUpdateProduct
+     * @request PATCH:/api/Product/UpdateProduct
+     */
+    productUpdateProduct: (
+      data: UpdateProductRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductDto, any>({
+        path: `/api/Product/UpdateProduct`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
      * @tags Product
      * @name ProductGetProducts
-     * @request GET:/Product/GetProducts
+     * @request GET:/api/Product/GetProducts
      */
     productGetProducts: (
       query?: {
@@ -356,11 +444,12 @@ export class Api<
         page?: number;
         /** @format int32 */
         resultsPerPage?: number;
+        productTypeId?: string[] | null;
       },
       params: RequestParams = {},
     ) =>
       this.request<ProductDto[], any>({
-        path: `/Product/GetProducts`,
+        path: `/api/Product/GetProducts`,
         method: "GET",
         query: query,
         format: "json",
@@ -370,34 +459,13 @@ export class Api<
     /**
      * No description
      *
-     * @tags Product
-     * @name ProductCreateProduct
-     * @request POST:/Product/CreateProduct
-     */
-    productCreateProduct: (
-      data: CreateProductRequestDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<ProductDto, any>({
-        path: `/Product/CreateProduct`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-  };
-  productType = {
-    /**
-     * No description
-     *
      * @tags ProductType
      * @name ProductTypeGetProductTypes
-     * @request GET:/ProductType/GetProductTypes
+     * @request GET:/api/ProductType/GetProductTypes
      */
     productTypeGetProductTypes: (params: RequestParams = {}) =>
-      this.request<ProductType[], any>({
-        path: `/ProductType/GetProductTypes`,
+      this.request<ProductTypeDto[], any>({
+        path: `/api/ProductType/GetProductTypes`,
         method: "GET",
         format: "json",
         ...params,
