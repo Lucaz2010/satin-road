@@ -3,7 +3,7 @@ using Infra;
 using Infra.Entities;
 using LinqToDB;
 
-namespace API.Controllers;
+namespace Service;
 
 public class ProductService (SatinRoadDbConnection db)
 {

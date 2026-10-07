@@ -1,7 +1,7 @@
 ﻿using Facet;
 using Infra.Entities;
 
-namespace API.Controllers;
+namespace Service;
 
 
 [Facet(sourceType:typeof(User),

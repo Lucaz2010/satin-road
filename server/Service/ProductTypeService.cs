@@ -1,7 +1,7 @@
 ﻿using Infra;
 using Infra.Entities;
 
-namespace API.Controllers;
+namespace Service;
 
 public class ProductTypeService (SatinRoadDbConnection db)
 {

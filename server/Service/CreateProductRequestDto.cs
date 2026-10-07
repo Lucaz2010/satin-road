@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.Controllers;
+namespace Service;
 
 public class CreateProductRequestDto
 {

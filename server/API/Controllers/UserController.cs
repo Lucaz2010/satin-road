@@ -1,6 +1,7 @@
 ﻿using Infra;
 using Infra.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Service;
 
 namespace API.Controllers;
 

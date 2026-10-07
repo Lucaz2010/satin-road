@@ -3,6 +3,7 @@ using API.Controllers;
 using Infra;
 using Infra.Entities;
 using LinqToDB;
+using Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
