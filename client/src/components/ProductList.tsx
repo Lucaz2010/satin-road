@@ -7,22 +7,29 @@ const api = new Api();
 
 type ProductListProps={
     productTypeId?: string;
+    search?: string;
 }
 
-export default function ProductList({productTypeId}: ProductListProps) {
+export default function ProductList(
+    {
+        productTypeId,search,
+    }: ProductListProps) {
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchProducts() {
+            setLoading(true);
+            setError(null);
             try {
                 const response = await api.api.productGetProducts({
                     page: 1,
                     resultsPerPage: 12,
                     productTypeId: productTypeId
                         ? [productTypeId]
-                        : undefined,    
+                        : undefined,
+                    search: search || undefined,
                 });
 
                 setProducts(response.data);
@@ -35,7 +42,7 @@ export default function ProductList({productTypeId}: ProductListProps) {
         }
 
         void fetchProducts();
-    }, []);
+    }, [productTypeId,search]);
 
     if (loading) {
         return <p>Loading products...</p>;
@@ -50,7 +57,7 @@ export default function ProductList({productTypeId}: ProductListProps) {
     }
 
     return (
-        <div>
+        <div className="product-grid">
             {products.map((product) => (
                 <ProductCard
                     key={product.productId}

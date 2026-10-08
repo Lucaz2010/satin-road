@@ -12,9 +12,15 @@ public partial class ProductController(ProductService service) : ControllerBase
     public List<ProductDto> GetProducts(
         [FromQuery] int page,
         [FromQuery] int resultsPerPage,
-        [FromQuery] List <string>? productTypeId)
+        [FromQuery] List<string>? productTypeId,
+        [FromQuery] string? search)
     {
-        return service.GetProducts(page, resultsPerPage, productTypeId);
+        return service.GetProducts(
+            page,
+            resultsPerPage,
+            productTypeId,
+            search
+        );
     }
 
     [HttpGet("{id}")]

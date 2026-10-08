@@ -10,7 +10,9 @@ public class ProductService (SatinRoadDbConnection db)
 {
     public List<ProductDto> GetProducts(
         int page, int resultsPerPage,
-        List<string>? productTypeId)
+        List<string>? productTypeId,
+        string? search
+    )
     {
         if(page < 1)
             throw new ValidationException("Page must be 1 or higher.");
@@ -20,10 +22,21 @@ public class ProductService (SatinRoadDbConnection db)
         var query = db.Products
             .LoadWith(p => p.Vendor)
             .LoadWith((p=> p.ProductType))
+            .Where(p => p.IsActive && p.ProductType.IsActive)
             .AsQueryable();
         
         if (productTypeId is { Count: > 0 })
             query = query.Where(p => productTypeId.Contains(p.ProductTypeId));
+        
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim().ToLower();
+
+            query = query.Where(p =>
+                p.ProductName.ToLower().Contains(search) ||
+                (p.Description != null && p.Description.Contains(search))
+            );
+        }
 
         return query
             .OrderByDescending(p => p.CreatedAt)
@@ -44,6 +57,7 @@ public class ProductService (SatinRoadDbConnection db)
         var product = db.Products
             .LoadWith(p => p.Vendor)
             .LoadWith(p=> p.ProductType)
+            .Where(p => p.IsActive && p.ProductType.IsActive)
             .FirstOrDefault(p => p.ProductId == id);
 
         if (product == null)
