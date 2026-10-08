@@ -3,6 +3,7 @@ using Infra;
 using Infra.Entities;
 using LinqToDB;
 using Service;
+using Service.Dtos;
 
 namespace Tests;
 
@@ -75,7 +76,7 @@ public class ProductServiceTests : IDisposable
     [InlineData(-1)]
     public void GetProducts_PageBelowOne_Throws(int page)
     {
-        Assert.Throws<ValidationException>(() => _service.GetProducts(page, 10));
+        Assert.Throws<ValidationException>(() => _service.GetProducts(page, 10, null, null));
     }
 
     [Theory]
@@ -83,7 +84,7 @@ public class ProductServiceTests : IDisposable
     [InlineData(-1)]
     public void GetProducts_ResultsPerPageBelowOne_Throws(int resultsPerPage)
     {
-        Assert.Throws<ValidationException>(() => _service.GetProducts(1, resultsPerPage));
+        Assert.Throws<ValidationException>(() => _service.GetProducts(1, resultsPerPage, null, null));
     }
 
     [Fact]
@@ -91,7 +92,7 @@ public class ProductServiceTests : IDisposable
     {
         SeedProducts(5);
 
-        var result = _service.GetProducts(page: 1, resultsPerPage: 2);
+        var result = _service.GetProducts(page: 1, resultsPerPage: 2, productTypeId: null, search: null);
 
         Assert.Equal(2, result.Count);
     }
@@ -101,7 +102,7 @@ public class ProductServiceTests : IDisposable
     {
         SeedProducts(5);
 
-        var result = _service.GetProducts(page: 3, resultsPerPage: 2);
+        var result = _service.GetProducts(page: 3, resultsPerPage: 2, productTypeId: null, search: null);
 
         Assert.Single(result);
     }
@@ -111,7 +112,7 @@ public class ProductServiceTests : IDisposable
     {
         SeedProducts(5);
 
-        var result = _service.GetProducts(page: 10, resultsPerPage: 2);
+        var result = _service.GetProducts(page: 10, resultsPerPage: 2, productTypeId: null, search: null);
 
         Assert.Empty(result);
     }
@@ -121,7 +122,7 @@ public class ProductServiceTests : IDisposable
     {
         SeedProducts(1);
 
-        var product = Assert.Single(_service.GetProducts(1, 10));
+        var product = Assert.Single(_service.GetProducts(1, 10, null, null));
 
         Assert.Equal("vendor-1", product.Vendor.UserId);
         Assert.Equal("Conan", product.Vendor.Username);
