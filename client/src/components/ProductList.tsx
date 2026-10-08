@@ -16,6 +16,8 @@ export default function ProductList({productTypeId}: ProductListProps) {
 
     useEffect(() => {
         async function fetchProducts() {
+            setLoading(true);
+            setError(null);
             try {
                 const response = await api.api.productGetProducts({
                     page: 1,
@@ -35,7 +37,7 @@ export default function ProductList({productTypeId}: ProductListProps) {
         }
 
         void fetchProducts();
-    }, []);
+    }, [productTypeId]);
 
     if (loading) {
         return <p>Loading products...</p>;
@@ -50,7 +52,7 @@ export default function ProductList({productTypeId}: ProductListProps) {
     }
 
     return (
-        <div>
+        <div className="product-grid">
             {products.map((product) => (
                 <ProductCard
                     key={product.productId}
