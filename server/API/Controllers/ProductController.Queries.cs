@@ -13,13 +13,15 @@ public partial class ProductController(ProductService service) : ControllerBase
         [FromQuery] int page,
         [FromQuery] int resultsPerPage,
         [FromQuery] List<string>? productTypeId,
-        [FromQuery] string? search)
+        [FromQuery] string? search,
+        [FromQuery] string? vendorId)
     {
         return service.GetProducts(
             page,
             resultsPerPage,
             productTypeId,
-            search
+            search,
+            vendorId
         );
     }
 

@@ -25,7 +25,7 @@ export default function LoginPage() {
             console.log("Logged in:", response.data);
 
             // Temporary: store the logged-in user.
-            localStorage.setItem(
+            sessionStorage.setItem(
                 "user",
                 JSON.stringify(response.data)
             );

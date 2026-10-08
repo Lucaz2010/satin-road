@@ -457,6 +457,7 @@ export class Api<
         resultsPerPage?: number;
         productTypeId?: string[] | null;
         search?: string | null;
+        vendorId?: string | null;
       },
       params: RequestParams = {},
     ) =>

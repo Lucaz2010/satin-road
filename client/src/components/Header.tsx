@@ -15,7 +15,7 @@ export default function Header({productTypes}: HeaderProps) {
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
 
     useEffect(() => {
@@ -111,15 +111,19 @@ export default function Header({productTypes}: HeaderProps) {
                         </form>
                         {user ? (
                             <>
-                            <span className="icon-btn">
-                                 <UserIcon/>
-                                <span className="icon-btn__label">{user.username}</span>
-                             </span>
+                                <Link
+                                    to={`/vendor/${user.userId}`}
+                                    className="icon-btn"
+                                >
+                                    <UserIcon/>
+                                    <span className="icon-btn__label">{user.username}</span>
+                                </Link>
+
                                 <button
                                     type="button"
                                     className="icon-btn"
                                     onClick={() => {
-                                        localStorage.removeItem("user");
+                                        sessionStorage.removeItem("user");
                                         navigate("/");
                                     }}
                                 >

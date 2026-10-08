@@ -11,7 +11,8 @@ public class ProductService (SatinRoadDbConnection db)
     public List<ProductDto> GetProducts(
         int page, int resultsPerPage,
         List<string>? productTypeId,
-        string? search
+        string? search,
+        string? vendorId = null
     )
     {
         if(page < 1)
@@ -21,7 +22,7 @@ public class ProductService (SatinRoadDbConnection db)
         
         var query = db.Products
             .LoadWith(p => p.Vendor)
-            .LoadWith((p=> p.ProductType))
+            .LoadWith(p=> p.ProductType)
             .Where(p => p.IsActive && p.ProductType.IsActive)
             .AsQueryable();
         
@@ -36,6 +37,11 @@ public class ProductService (SatinRoadDbConnection db)
                 p.ProductName.ToLower().Contains(search) ||
                 (p.Description != null && p.Description.Contains(search))
             );
+        }
+        
+        if (!string.IsNullOrWhiteSpace(vendorId))
+        {
+            query = query.Where(p => p.VendorId == vendorId);
         }
 
         return query

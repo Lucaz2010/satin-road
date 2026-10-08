@@ -8,11 +8,14 @@ const api = new Api();
 type ProductListProps={
     productTypeId?: string;
     search?: string;
+    vendorId?: string;
 }
 
 export default function ProductList(
     {
-        productTypeId,search,
+        productTypeId,
+        search,
+        vendorId,
     }: ProductListProps) {
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [loading, setLoading] = useState(true);
@@ -30,6 +33,7 @@ export default function ProductList(
                         ? [productTypeId]
                         : undefined,
                     search: search || undefined,
+                    vendorId: vendorId || undefined,
                 });
 
                 setProducts(response.data);
@@ -42,7 +46,7 @@ export default function ProductList(
         }
 
         void fetchProducts();
-    }, [productTypeId,search]);
+    }, [productTypeId,search,vendorId]);
 
     if (loading) {
         return <p>Loading products...</p>;

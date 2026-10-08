@@ -36,7 +36,7 @@ export default function CreateListingPage() {
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
         setError("");
-        const storedUser = localStorage.getItem("user");
+        const storedUser = sessionStorage.getItem("user");
         const user = storedUser ? JSON.parse(storedUser) : null;
         if (!user) {
             setError("You must be logged in to create a listing.");
