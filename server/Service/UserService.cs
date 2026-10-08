@@ -22,7 +22,18 @@ public class UserService (SatinRoadDbConnection db)
             throw new UnauthorizedAccessException("Invalid username or password.");
 
         // Temporary login for development.
-        if (user.Username == "Admin_1" && dto.Password == "admin")
+        if (user.Username == "admin_1" && dto.Password == "admin")
+        {
+            return new LoginResponseDto
+            {
+                UserId = user.UserId,
+                Username = user.Username,
+                Role = user.Role
+            };
+        }
+        
+        // Temporary login for development.
+        if (user.Username == "lucaz" && dto.Password == "user")
         {
             return new LoginResponseDto
             {

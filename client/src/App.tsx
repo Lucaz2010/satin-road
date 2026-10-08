@@ -7,6 +7,8 @@ import VendorPage from "./pages/VendorPage";
 import ItemProductPage from "./pages/ItemProductPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "@/pages/AdminPage.tsx";
+import CreateListingPage from "@/pages/CreateListingPage.tsx";
+
 
 
 const router = createBrowserRouter([
@@ -46,6 +48,11 @@ const router = createBrowserRouter([
             {
                 path: "/admin",
                 element: <AdminPage/>
+            },
+
+            {
+              path: "/create-listing",
+              element: <CreateListingPage/>  
             },
         ],
     },

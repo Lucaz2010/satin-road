@@ -6,7 +6,7 @@ type HeaderProps = {
     productTypes: ProductTypeDto[];
 };
 
-export default function Header({ productTypes }: HeaderProps) {
+export default function Header({productTypes}: HeaderProps) {
     const {pathname} = useLocation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -14,6 +14,9 @@ export default function Header({ productTypes }: HeaderProps) {
     const [searchOpen, setSearchOpen] = useState(false);
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
 
     useEffect(() => {
         if (searchOpen) inputRef.current?.focus();
@@ -33,21 +36,21 @@ export default function Header({ productTypes }: HeaderProps) {
     ];
 
     function handleSearch(e: FormEvent) {
-        e.preventDefault(); 
+        e.preventDefault();
         const q = query.trim();
 
         if (!searchOpen) {
-            setSearchOpen(true); 
-            return; 
-        }
-
-        if (!q) { 
-            navigate("/products"); 
-            setSearchOpen(false); 
-            setQuery(""); 
+            setSearchOpen(true);
             return;
         }
-        navigate(`/products?search=${encodeURIComponent(q)}`); 
+
+        if (!q) {
+            navigate("/products");
+            setSearchOpen(false);
+            setQuery("");
+            return;
+        }
+        navigate(`/products?search=${encodeURIComponent(q)}`);
         setSearchOpen(false);
     }
 
@@ -59,9 +62,11 @@ export default function Header({ productTypes }: HeaderProps) {
                         Satin Road<span className="brand__dot">.</span>
                     </Link>
                     <div className="site-header__meta">
-                        <Link to="/admin" className="header-btn">
-                            Admin
-                        </Link>
+                        {user?.role === "Admin" && (
+                            <Link to="/admin" className="header-btn">
+                                Admin
+                            </Link>
+                        )}
 
                         <Link to="/create-listing" className="header-btn">
                             Create Listing
@@ -82,7 +87,7 @@ export default function Header({ productTypes }: HeaderProps) {
                             </Link>
                         ))}
                     </nav>
-                    
+
                     <div className="site-actions">
                         <form
                             className={`search${searchOpen ? " is-open" : ""}`}
@@ -104,14 +109,33 @@ export default function Header({ productTypes }: HeaderProps) {
                                 <SearchIcon/>
                             </button>
                         </form>
-
-                        <button
-                            type="button"
-                            className="icon-btn"
-                            onClick={() => navigate("/login")}>
-                            <UserIcon/>
-                            <span className="icon-btn__label">Login</span>
-                        </button>
+                        {user ? (
+                            <>
+                            <span className="icon-btn">
+                                 <UserIcon/>
+                                <span className="icon-btn__label">{user.username}</span>
+                             </span>
+                                <button
+                                    type="button"
+                                    className="icon-btn"
+                                    onClick={() => {
+                                        localStorage.removeItem("user");
+                                        navigate("/");
+                                    }}
+                                >
+                                    <span className="icon-btn__label">Logout</span>
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                type="button"
+                                className="icon-btn"
+                                onClick={() => navigate("/login")}
+                            >
+                                <UserIcon/>
+                                <span className="icon-btn__label">Login</span>
+                            </button>
+                        )}
 
                         <button type="button" className="icon-btn" aria-label="Cart, 0 items">
                             <CartIcon/>
