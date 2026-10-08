@@ -16,6 +16,7 @@ public class ProductTypeService (SatinRoadDbConnection db)
             query = query.Where(pt => pt.IsActive);
         
         return query
+            .OrderBy(pt => pt.ProductTypeName)
             .Select(pt => new ProductTypeDto(pt))
             .ToList();
     }

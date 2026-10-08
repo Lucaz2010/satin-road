@@ -3,10 +3,11 @@ import {Api, type ProductTypeDto} from "../../Api.ts";
 
 const api = new Api();
 
+
+
 export default function AdminPage() {
     const [productTypes, setProductTypes] = useState<ProductTypeDto[]>([]);
     const [loading, setLoading] = useState(true);
-
     async function loadProductTypes() {
         try {
             const response = await api.api.productTypeGetProductTypes({
@@ -28,7 +29,10 @@ export default function AdminPage() {
     async function handleActivate(id: string) {
         try {
             await api.api.productTypeActivateProductType({id});
+
             await loadProductTypes();
+
+            window.dispatchEvent(new Event("productTypesChanged"));
         } catch (error) {
             console.error("Failed to activate category:", error);
         }
@@ -37,7 +41,10 @@ export default function AdminPage() {
     async function handleDeactivate(id: string) {
         try {
             await api.api.productTypeDeactivateProductType({id});
+
             await loadProductTypes();
+
+            window.dispatchEvent(new Event("productTypesChanged"));
         } catch (error) {
             console.error("Failed to deactivate category:", error);
         }
