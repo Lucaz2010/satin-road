@@ -28,25 +28,8 @@ export default function ProductsPage() {
 
     return (
         <div>
-            <button onClick={() => navigate("/")}>
-                Home
-            </button>
-
+            
             <h1>Products</h1>
-
-            <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-
-                <button type="submit">
-                    Search
-                </button>
-            </form>
-
             <ProductList
                 productTypeId={productTypeId ?? undefined}
                 search={currentSearch || undefined}
