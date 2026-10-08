@@ -15,7 +15,7 @@ export function CategoryPage() {
 
         setLoading(true);
 
-        MyApi.product.productGetProducts({
+        MyApi.api.productGetProducts({
             page: 1,
             resultsPerPage: 50,
         })
