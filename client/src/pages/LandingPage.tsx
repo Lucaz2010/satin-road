@@ -1,41 +1,63 @@
 import {useEffect, useState} from "react";
-import {Api, type ProductDto} from "../../Api.ts";
+import {Api, type ProductDto, type ProductTypeDto} from "../../Api.ts";
 import ProductSection from "@/components/ProductSection.tsx";
 import FeaturedVendors from "@/components/FeaturedVendors.tsx";
-import {CATEGORIES} from "@/categories.ts";
+import {useOutletContext} from "react-router";
+
 
 const api = new Api();
 
 export default function LandingPage() {
-    const [productsByType, setProductsByType] = useState<Record<string, ProductDto[]>>({});
+    const productTypes = useOutletContext<ProductTypeDto[]>();
+
+    const [productsByType, setProductsByType] =
+        useState<Record<string, ProductDto[]>>({});
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        Promise.all(CATEGORIES.map(category =>
-            api.api.productGetProducts({
-                page: 1,
-                resultsPerPage: 4,
-                productTypeId: [category.id],
-            })
-        ))
-            .then(responses => setProductsByType(Object.fromEntries(
-                CATEGORIES.map((category, i) => [category.id, responses[i]?.data ?? []])
-            )))
-            .catch(error => console.error("Failed to fetch products:", error))
+        if (productTypes.length === 0) {
+            return;
+        }
+
+        setLoading(true);
+
+        Promise.all(
+            productTypes.map(type =>
+                api.api.productGetProducts({
+                    page: 1,
+                    resultsPerPage: 4,
+                    productTypeId: [type.productTypeId!],
+                })
+            )
+        )
+            .then(responses =>
+                setProductsByType(
+                    Object.fromEntries(
+                        productTypes.map((type, i) => [
+                            type.productTypeId,
+                            responses[i]?.data ?? [],
+                        ])
+                    )
+                )
+            )
+            .catch(error =>
+                console.error("Failed to fetch products:", error)
+            )
             .finally(() => setLoading(false));
-    }, []);
+    }, [productTypes]);
 
     return (
         <>
-            <FeaturedVendors/>
+            <FeaturedVendors />
 
-            {CATEGORIES.map((category, i) => (
+            {productTypes.map((type, i) => (
                 <ProductSection
-                    key={category.id}
+                    key={type.productTypeId}
                     index={i + 1}
-                    title={category.label}
-                    products={productsByType[category.id] ?? []}
-                    productTypeId={category.id}
+                    title={type.productTypeName ?? "Unnamed"}
+                    products={productsByType[type.productTypeId!] ?? []}
+                    productTypeId={type.productTypeId!}
                     loading={loading}
                 />
             ))}

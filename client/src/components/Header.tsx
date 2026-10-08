@@ -1,8 +1,12 @@
 import {Link, useLocation, useNavigate, useSearchParams} from "react-router";
 import {type FormEvent, useEffect, useRef, useState} from "react";
-import {CATEGORIES} from "@/categories.ts";
+import type {ProductTypeDto} from "../../Api.ts";
 
-export default function Header() {
+type HeaderProps = {
+    productTypes: ProductTypeDto[];
+};
+
+export default function Header({ productTypes }: HeaderProps) {
     const {pathname} = useLocation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -21,21 +25,29 @@ export default function Header() {
 
     const links = [
         {to: "/", label: "Home", active: pathname === "/"},
-        ...CATEGORIES.map(c => ({
-            to: `/products?productTypeId=${c.id}`,
-            label: c.label,
-            active: activeTypeId === c.id,
+        ...productTypes.map(type => ({
+            to: `/products?productTypeId=${type.productTypeId}`,
+            label: type.productTypeName ?? "Unnamed",
+            active: activeTypeId === type.productTypeId,
         })),
     ];
 
     function handleSearch(e: FormEvent) {
-        e.preventDefault();
+        e.preventDefault(); 
         const q = query.trim();
-        if (!q) {
-            setSearchOpen(open => !open);
+
+        if (!searchOpen) {
+            setSearchOpen(true); 
+            return; 
+        }
+
+        if (!q) { 
+            navigate("/products"); 
+            setSearchOpen(false); 
+            setQuery(""); 
             return;
         }
-        navigate(`/products?search=${encodeURIComponent(q)}`);
+        navigate(`/products?search=${encodeURIComponent(q)}`); 
         setSearchOpen(false);
     }
 
@@ -46,7 +58,15 @@ export default function Header() {
                     <Link to="/" className="brand">
                         Satin Road<span className="brand__dot">.</span>
                     </Link>
-                    <span className="eyebrow site-header__meta">Index · Restricted access</span>
+                    <div className="site-header__meta">
+                        <Link to="/admin" className="header-btn">
+                            Admin
+                        </Link>
+
+                        <Link to="/create-listing" className="header-btn">
+                            Create Listing
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="site-header__bar">
@@ -62,7 +82,7 @@ export default function Header() {
                             </Link>
                         ))}
                     </nav>
-
+                    
                     <div className="site-actions">
                         <form
                             className={`search${searchOpen ? " is-open" : ""}`}
@@ -85,7 +105,10 @@ export default function Header() {
                             </button>
                         </form>
 
-                        <button type="button" className="icon-btn">
+                        <button
+                            type="button"
+                            className="icon-btn"
+                            onClick={() => navigate("/login")}>
                             <UserIcon/>
                             <span className="icon-btn__label">Login</span>
                         </button>

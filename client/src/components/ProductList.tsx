@@ -7,9 +7,13 @@ const api = new Api();
 
 type ProductListProps={
     productTypeId?: string;
+    search?: string;
 }
 
-export default function ProductList({productTypeId}: ProductListProps) {
+export default function ProductList(
+    {
+        productTypeId,search,
+    }: ProductListProps) {
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -24,7 +28,8 @@ export default function ProductList({productTypeId}: ProductListProps) {
                     resultsPerPage: 12,
                     productTypeId: productTypeId
                         ? [productTypeId]
-                        : undefined,    
+                        : undefined,
+                    search: search || undefined,
                 });
 
                 setProducts(response.data);
@@ -37,7 +42,7 @@ export default function ProductList({productTypeId}: ProductListProps) {
         }
 
         void fetchProducts();
-    }, [productTypeId]);
+    }, [productTypeId,search]);
 
     if (loading) {
         return <p>Loading products...</p>;

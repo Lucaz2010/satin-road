@@ -98,6 +98,17 @@ export interface Product {
   productType?: ProductType;
 }
 
+export interface LoginResponseDto {
+  userId?: string;
+  username?: string;
+  role?: string;
+}
+
+export interface LoginRequestDto {
+  username?: string;
+  password?: string;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -445,6 +456,7 @@ export class Api<
         /** @format int32 */
         resultsPerPage?: number;
         productTypeId?: string[] | null;
+        search?: string | null;
       },
       params: RequestParams = {},
     ) =>
@@ -460,13 +472,105 @@ export class Api<
      * No description
      *
      * @tags ProductType
+     * @name ProductTypeCreateProductType
+     * @request POST:/api/ProductType/CreateProductType
+     */
+    productTypeCreateProductType: (
+      query?: {
+        name?: string;
+        description?: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductTypeDto, any>({
+        path: `/api/ProductType/CreateProductType`,
+        method: "POST",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ProductType
+     * @name ProductTypeUpdateProductType
+     * @request PATCH:/api/ProductType/UpdateProductType
+     */
+    productTypeUpdateProductType: (
+      query?: {
+        id?: string;
+        name?: string;
+        description?: string | null;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductTypeDto, any>({
+        path: `/api/ProductType/UpdateProductType`,
+        method: "PATCH",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ProductType
+     * @name ProductTypeDeactivateProductType
+     * @request DELETE:/api/ProductType/DeactivateProductType
+     */
+    productTypeDeactivateProductType: (
+      query?: {
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/ProductType/DeactivateProductType`,
+        method: "DELETE",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ProductType
+     * @name ProductTypeActivateProductType
+     * @request PATCH:/api/ProductType/ActivateProductType
+     */
+    productTypeActivateProductType: (
+      query?: {
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/ProductType/ActivateProductType`,
+        method: "PATCH",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ProductType
      * @name ProductTypeGetProductTypes
      * @request GET:/api/ProductType/GetProductTypes
      */
-    productTypeGetProductTypes: (params: RequestParams = {}) =>
+    productTypeGetProductTypes: (
+      query?: {
+        /** @default true */
+        isActive?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<ProductTypeDto[], any>({
         path: `/api/ProductType/GetProductTypes`,
         method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -483,6 +587,23 @@ export class Api<
       this.request<User[], any>({
         path: `/User/GetUsers`,
         method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags User
+     * @name UserLogin
+     * @request POST:/User/Login
+     */
+    userLogin: (data: LoginRequestDto, params: RequestParams = {}) =>
+      this.request<LoginResponseDto, any>({
+        path: `/User/Login`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

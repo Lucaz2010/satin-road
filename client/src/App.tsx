@@ -5,6 +5,8 @@ import ProductsPage from "./pages/ProductsPage";
 import {CategoryPage} from "./pages/CategoryPage";
 import VendorPage from "./pages/VendorPage";
 import ItemProductPage from "./pages/ItemProductPage";
+import LoginPage from "./pages/LoginPage";
+import AdminPage from "@/pages/AdminPage.tsx";
 
 
 const router = createBrowserRouter([
@@ -34,6 +36,16 @@ const router = createBrowserRouter([
             {
                 path: "/vendor/:vendorId",
                 element: <VendorPage/>
+            },
+
+            {
+                path: "/login",
+                element: <LoginPage/>
+            },
+
+            {
+                path: "/admin",
+                element: <AdminPage/>
             },
         ],
     },

@@ -67,7 +67,7 @@ export default function FeaturedVendors() {
         >
             <div className="featured__head">
                 <div>
-                    <span className="eyebrow">Bestsellers · This cycle</span>
+                    <span className="eyebrow">Bestsellers · Top Vendors</span>
                     <h1 className="featured__title">Featured</h1>
                 </div>
 
