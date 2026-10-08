@@ -1054,6 +1054,13 @@ a {
     color: var(--muted);
 }
 
+.admin-category__button--edit:hover {
+    background: white;
+    color: black;
+    border-color: white;
+}
+
+
 /* ---------- admin responsive ---------- */
 @media (max-width: 700px) {
     .admin-category__intro {
@@ -1084,4 +1091,130 @@ a {
     .admin-category__text {
         white-space: normal;
     }
+
+    .admin-category__edit-button {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+    }
+    
 }
+
+/* ---------- category form ---------- */
+
+.admin-category__form {
+    margin: 28px 0;
+    padding: 24px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.admin-category__form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.admin-category__form-field label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+}
+
+.admin-category__form-field input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+
+    font: inherit;
+    outline: none;
+}
+
+.admin-category__form-field input::placeholder {
+    color: var(--text-dim);
+}
+
+.admin-category__form-field input:focus {
+    border-color: var(--text);
+}
+
+.admin-category__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+}
+.admin-category__form {
+    margin: 28px 0;
+    padding: 24px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.admin-category__form-header {
+    margin-bottom: 24px;
+}
+
+.admin-category__form-header h3 {
+    margin: 6px 0 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.admin-category__form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.admin-category__form-field label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+}
+
+.admin-category__form-field input,
+.admin-category__form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font: inherit;
+    outline: none;
+}
+
+.admin-category__form-field textarea {
+    resize: vertical;
+}
+
+.admin-category__form-field input:focus,
+.admin-category__form-field textarea:focus {
+    border-color: var(--text);
+}
+
+.admin-category__form-field input::placeholder,
+.admin-category__form-field textarea::placeholder {
+    color: var(--text-dim);
+}
+
+.admin-category__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+

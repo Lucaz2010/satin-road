@@ -4,10 +4,15 @@ import {Api, type ProductTypeDto} from "../../Api.ts";
 const api = new Api();
 
 
-
 export default function AdminPage() {
     const [productTypes, setProductTypes] = useState<ProductTypeDto[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const [showForm, setShowForm] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+
     async function loadProductTypes() {
         try {
             const response = await api.api.productTypeGetProductTypes({
@@ -50,6 +55,55 @@ export default function AdminPage() {
         }
     }
 
+    function openCreateForm() {
+        setEditingId(null);
+        setName("");
+        setDescription("");
+        setShowForm(true);
+    }
+
+    function openEditForm(type: ProductTypeDto) {
+        setEditingId(type.productTypeId ?? null);
+        setName(type.productTypeName ?? "");
+        setDescription(type.description ?? "");
+        setShowForm(true);
+    }
+
+    function closeForm() {
+        setShowForm(false);
+        setEditingId(null);
+        setName("");
+        setDescription("");
+    }
+
+    async function handleSubmit(event: React.FormEvent) {
+        event.preventDefault();
+
+        try {
+            if (editingId) {
+                await api.api.productTypeUpdateProductType({
+                    id: editingId,
+                    name,
+                    description,
+                });
+            } else {
+                await api.api.productTypeCreateProductType({
+                    name,
+                    description,
+                });
+            }
+
+            await loadProductTypes();
+
+            window.dispatchEvent(new Event("productTypesChanged"));
+
+            closeForm();
+        } catch (error) {
+            console.error("Failed to save category:", error);
+        }
+    }
+
+
     if (loading) {
         return <p>Loading categories...</p>;
     }
@@ -62,15 +116,86 @@ export default function AdminPage() {
                     className="admin-category__description"> Manage which product categories are currently available to
                     vendors and customers. </p></div>
                 <div className="section">
-                    <div className="section__head"><span className="section__index">01</span> <h2
-                        className="section__title"> Product Categories </h2> <span className="section__rule"/></div>
-                    <div className="admin-category__list"> {productTypes.map(type => {
+                    <div className="section__head">
+                        <span className="section__index">01</span>
+                        <h2
+                        className="section__title"> Product Categories
+                        </h2>
+                        <span className="section__rule"/>
+                        <button
+                            type="button"
+                            className="btn-outline"
+                            onClick={openCreateForm}
+                        >
+                            + Create Category
+                        </button>
+                    </div>
+                    {showForm && (
+                        <form className="admin-category__form" onSubmit={handleSubmit}>
+
+                            <div className="admin-category__form-header">
+            <span className="eyebrow">
+                {editingId ? "Edit Category" : "Create Category"}
+            </span>
+                                <h3>
+                                    {editingId
+                                        ? "Update Product Category"
+                                        : "Create Product Category"}
+                                </h3>
+                            </div>
+
+                            <div className="admin-category__form-field">
+                                <label htmlFor="category-name">Name</label>
+                                <input
+                                    id="category-name"
+                                    type="text"
+                                    value={name}
+                                    onChange={(event) => setName(event.target.value)}
+                                    placeholder="Category name"
+                                    required
+                                />
+                            </div>
+
+                            <div className="admin-category__form-field">
+                                <label htmlFor="category-description">Description</label>
+                                <textarea
+                                    id="category-description"
+                                    value={description}
+                                    onChange={(event) => setDescription(event.target.value)}
+                                    placeholder="Category description"
+                                    rows={3}
+                                />
+                            </div>
+
+                            <div className="admin-category__form-actions">
+                                <button
+                                    type="button"
+                                    className="admin-category__button"
+                                    onClick={closeForm}
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    className="btn-outline"
+                                >
+                                    {editingId ? "Save Changes" : "Create Category"}
+                                </button>
+                            </div>
+
+                        </form>
+                    )}
+                    
+                    <div className="admin-category__list">
+                        {productTypes.map(type => {
                         const id = type.productTypeId;
                         if (!id) {
                             return null;
                         }
                         const isActive = type.isActive === true;
                         return (
+                            
                             <div className={`admin-category__item ${isActive ? "" : "admin-category__item--inactive"}`}
                                  key={id}>
                                 <div className="admin-category__main">
@@ -80,12 +205,27 @@ export default function AdminPage() {
                                 <div className="admin-category__status"><span
                                     className={`admin-category__status-dot ${isActive ? "admin-category__status-dot--active" : "admin-category__status-dot--inactive"}`}/>
                                     <span> {isActive ? "ACTIVE" : "INACTIVE"} </span></div>
+                                
                                 <button
                                     className={`admin-category__button ${isActive ? "admin-category__button--deactivate" : "admin-category__button--activate"}`}
                                     type="button"
-                                    onClick={() => isActive ? handleDeactivate(id) : handleActivate(id)}> {isActive ? "Deactivate" : "Activate"} </button>
-                            </div>);
-                    })} </div>
+                                    onClick={() => isActive ? handleDeactivate(id) : handleActivate(id)}> {isActive ? "Deactivate" : "Activate"} 
+                                </button>
+                                <button
+                                    type="button"
+                                    className="admin-category__button admin-category__button--deactivate admin-category__button--edit"
+                                    onClick={() => openEditForm(type)}
+                                >
+                                    Edit
+                                </button>
+                            </div>
+                        
+                        );
+                    }
+                    
+                    
+                    )}
+                    </div>
                 </div>
             </div>
         </div>);
